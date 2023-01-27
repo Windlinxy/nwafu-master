@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.nwafumaster.mapper.QuestionMapper">
+
+    <resultMap id="BaseResultMap" type="pers.nwafumaster.beans.Question">
+            <id property="questionId" column="question_id" jdbcType="INTEGER"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="diseaseId" column="disease_id" jdbcType="INTEGER"/>
+            <result property="diseaseName" column="disease_name" jdbcType="VARCHAR"/>
+            <result property="diseaseType" column="disease_type" jdbcType="VARCHAR"/>
+            <result property="questionType" column="question_type" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        question_id,description,disease_id,
+        disease_name,disease_type,question_type
+    </sql>
+</mapper>
