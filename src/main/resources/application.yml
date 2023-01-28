@@ -1,0 +1,16 @@
+spring:
+#  profiles:
+#    active: dev
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 10000
+      validation-timeout: 3000
+      idle-timeout: 60000
+      login-timeout: 5
+      max-lifetime: 1200000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      read-only: false
