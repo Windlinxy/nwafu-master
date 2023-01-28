@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "file-service.path",
+      "type": "java.lang.String",
+      "description": "Description for file-service.path."
+    },
+    {
+      "name": "file-service.image-url",
+      "type": "java.lang.String",
+      "description": "Description for file-service.image-url."
+    }
+  ] }
