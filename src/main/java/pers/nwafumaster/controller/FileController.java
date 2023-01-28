@@ -12,6 +12,7 @@ import pers.nwafumaster.vo.JsonResult;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,14 +33,21 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @PostMapping(value = "/images", consumes = "multipart/form-data")
-    public JsonResult<Object> putImage(HttpServletRequest request,
-                                       @RequestParam("image") MultipartFile file){
-        Map<String, Object> map = new HashMap<>(4);
-        if(file.isEmpty()){
+    @PostMapping(value = "/image", consumes = "multipart/form-data")
+    public JsonResult<Object> putImage(MultipartFile image){
+        if(image.isEmpty()){
             return new JsonResult<>().fail("图片不能为空");
         }
-        String imageUrl = fileService.fileStore(file);
+        String imageUrl = fileService.fileStore(image);
         return new JsonResult<>().ok(imageUrl);
+    }
+
+    @PostMapping(value = "/images", consumes = "multipart/form-data")
+    public JsonResult<Object> uploadImages(MultipartFile[] images){
+        if(images[0].isEmpty()){
+            return new JsonResult<>().fail("图片不能为空");
+        }
+        List<String> imageUrlList = fileService.multiFileStore(images);
+        return new JsonResult<>().ok(imageUrlList);
     }
 }

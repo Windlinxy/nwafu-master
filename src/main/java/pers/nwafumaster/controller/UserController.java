@@ -2,6 +2,7 @@ package pers.nwafumaster.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import pers.nwafumaster.beans.Question;
 import pers.nwafumaster.beans.User;
@@ -10,6 +11,8 @@ import pers.nwafumaster.vo.JsonResult;
 import pers.nwafumaster.vo.UserRegister;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Windlinxy
@@ -31,12 +34,12 @@ public class UserController {
 
     @PostMapping("/login")
     public JsonResult<User> login(@RequestBody User user) {
-        log.info("/user/login : "+user);
-        if ("".equals(user.getUsername()) || "".equals(user.getPassword())){
+        log.info("/user/login : " + user);
+        if ("".equals(user.getUsername()) || "".equals(user.getPassword())) {
             return new JsonResult<User>().fail();
         }
         User userInData;
-        if((userInData = userService.getOne(new QueryWrapper<>(user))) != null){
+        if ((userInData = userService.getOne(new QueryWrapper<>(user))) != null) {
             return new JsonResult<User>().ok(userInData);
         }
         return new JsonResult<User>().fail();
@@ -45,11 +48,11 @@ public class UserController {
     @PostMapping("/register")
     public JsonResult<User> register(@RequestBody UserRegister userRegister) {
         User user =  new User(userRegister);
-        log.info("/user/register : "+user);
-        if ("".equals(user.getUsername()) || "".equals(user.getPassword())){
+        log.info("/user/register : "+userRegister);
+        if (!StringUtils.hasLength(user.getUsername()) || !StringUtils.hasLength(user.getPassword())){
             return new JsonResult<User>().fail();
         }
-        if(userService.save(user)){
+        if (userService.save(user)) {
             return new JsonResult<User>().ok(userService.getOne(new QueryWrapper<>(user)));
         }
         return new JsonResult<User>().fail();

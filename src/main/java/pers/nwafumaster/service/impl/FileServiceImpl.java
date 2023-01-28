@@ -3,11 +3,14 @@ package pers.nwafumaster.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pers.nwafumaster.service.FileService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -23,9 +26,9 @@ public class FileServiceImpl implements FileService {
     private String path = "";
 
     @Value("${file-service.image-url}")
-    private String imageUrl="";
+    private String imageUrl = "";
 
-    public String test(){
+    public String test() {
         return path;
     }
 
@@ -35,25 +38,15 @@ public class FileServiceImpl implements FileService {
         String localFilePart;
         // 获取上传的文件名扩展名
         String disposition = file.getOriginalFilename();
-        String suffix;
-        if (disposition != null) {
-            suffix = disposition.substring(disposition.lastIndexOf("."));
-        } else {
-            suffix = "";
-        }
-        File fileDisk = new File(path);
-
-        if (!fileDisk.exists()) {
-            fileDisk.mkdir();
-        }
-
+        String suffix = disposition != null ? disposition.substring(disposition.lastIndexOf(".")) : "";
+//        File fileDisk = new File(path);
+//        if (!fileDisk.exists()) {
+//            fileDisk.mkdir();
+//        }
         // 随机的生成uuid，作为文件名的一部分。 加上刚才获取到的后缀作为最终文件名。
         String uuid = UUID.randomUUID() + "";
         String filename = uuid.substring(0, 13) + suffix;
-
-
-        serverFilePart = imageUrl  + filename;
-
+        serverFilePart = imageUrl + filename;
         localFilePart = path + filename;
 
         log.info("存储路径：" + localFilePart);
@@ -64,5 +57,14 @@ public class FileServiceImpl implements FileService {
             throw new RuntimeException();
         }
         return serverFilePart;
+    }
+
+    @Override
+    public List<String> multiFileStore(MultipartFile[] files) {
+        ArrayList<String> urlList = new ArrayList<>();
+        for(MultipartFile file : files){
+            urlList.add(fileStore(file));
+        }
+        return urlList;
     }
 }
