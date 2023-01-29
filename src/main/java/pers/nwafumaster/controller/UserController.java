@@ -1,7 +1,9 @@
 package pers.nwafumaster.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.jdbc.Null;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import pers.nwafumaster.beans.Question;
@@ -11,6 +13,8 @@ import pers.nwafumaster.vo.JsonResult;
 import pers.nwafumaster.vo.UserRegister;
 
 import javax.annotation.Resource;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +39,7 @@ public class UserController {
     @PostMapping("/login")
     public JsonResult<User> login(@RequestBody User user) {
         log.info("/user/login : " + user);
-        if ("".equals(user.getUsername()) || "".equals(user.getPassword())) {
+        if (!StringUtils.hasLength(user.getUsername()) || !StringUtils.hasLength(user.getPassword())) {
             return new JsonResult<User>().fail();
         }
         User userInData;
@@ -45,17 +49,36 @@ public class UserController {
         return new JsonResult<User>().fail();
     }
 
+    @PostMapping("/check")
+    public JsonResult<Object> duplicateCheck(String username) {
+        log.info("/user/check: {}",username);
+        if (!StringUtils.hasLength(username)) {
+            return new JsonResult<>().fail("用户名为空");
+        }
+        long result = userService.count(new QueryWrapper<User>().select("username").eq("username",username));
+        if(result == 1){
+            return new JsonResult<>().fail("用户名已存在");
+        }
+        return new JsonResult<>().ok();
+    }
+
+
     @PostMapping("/register")
     public JsonResult<User> register(@RequestBody UserRegister userRegister) {
-        User user =  new User(userRegister);
-        log.info("/user/register : "+userRegister);
-        if (!StringUtils.hasLength(user.getUsername()) || !StringUtils.hasLength(user.getPassword())){
+        User user = new User(userRegister);
+        log.info("/user/register : " + userRegister);
+        if (!StringUtils.hasLength(user.getUsername()) || !StringUtils.hasLength(user.getPassword())) {
             return new JsonResult<User>().fail();
         }
-        if (userService.save(user)) {
-            return new JsonResult<User>().ok(userService.getOne(new QueryWrapper<>(user)));
+        LambdaQueryWrapper<User> userQuery = new LambdaQueryWrapper<>();
+        userQuery.eq(User::getUsername, user.getUsername())
+                .select(User::getUsername);
+        long result = userService.count(userQuery);
+        if(result == 1){
+            return new JsonResult<User>().fail("用户名已存在");
         }
-        return new JsonResult<User>().fail();
+        userService.save(user);
+        return new JsonResult<User>().ok(userService.getOne(new QueryWrapper<>(user)));
     }
 
 
