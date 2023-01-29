@@ -5,6 +5,7 @@ import pers.nwafumaster.beans.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
+ * @author Windlinxy
  * @Entity pers.nwafumaster.beans.User
  */
 @Mapper

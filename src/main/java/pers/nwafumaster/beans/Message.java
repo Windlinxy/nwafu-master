@@ -11,6 +11,7 @@ import lombok.Data;
 import pers.nwafumaster.enums.MessageType;
 
 /**
+ * @author Windlinxy
  * @TableName tb_message
  */
 @TableName(value = "tb_message")
