@@ -51,12 +51,12 @@ public class UserController {
 
     @PostMapping("/check")
     public JsonResult<Object> duplicateCheck(String username) {
-        log.info("/user/check: {}",username);
+        log.info("/user/check: {}", username);
         if (!StringUtils.hasLength(username)) {
             return new JsonResult<>().fail("用户名为空");
         }
-        long result = userService.count(new QueryWrapper<User>().select("username").eq("username",username));
-        if(result == 1){
+        long result = userService.count(new QueryWrapper<User>().select("username").eq("username", username));
+        if (result == 1) {
             return new JsonResult<>().fail("用户名已存在");
         }
         return new JsonResult<>().ok();
@@ -74,7 +74,7 @@ public class UserController {
         userQuery.eq(User::getUsername, user.getUsername())
                 .select(User::getUsername);
         long result = userService.count(userQuery);
-        if(result == 1){
+        if (result == 1) {
             return new JsonResult<User>().fail("用户名已存在");
         }
         userService.save(user);

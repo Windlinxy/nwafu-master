@@ -17,7 +17,7 @@ import java.util.Map;
 
 /**
  * @author Windlinxy
- * @description
+ * @description 文件存储相关
  * @date 2023-01-28 16:49
  **/
 @RestController
@@ -34,8 +34,8 @@ public class FileController {
     }
 
     @PostMapping(value = "/image", consumes = "multipart/form-data")
-    public JsonResult<Object> putImage(MultipartFile image){
-        if(image.isEmpty()){
+    public JsonResult<Object> putImage(MultipartFile image) {
+        if (image.isEmpty()) {
             return new JsonResult<>().fail("图片不能为空");
         }
         String imageUrl = fileService.fileStore(image);
@@ -43,8 +43,8 @@ public class FileController {
     }
 
     @PostMapping(value = "/images", consumes = "multipart/form-data")
-    public JsonResult<Object> uploadImages(MultipartFile[] images){
-        if(images[0].isEmpty()){
+    public JsonResult<Object> uploadImages(MultipartFile[] images) {
+        if (images[0].isEmpty()) {
             return new JsonResult<>().fail("图片不能为空");
         }
         List<String> imageUrlList = fileService.multiFileStore(images);

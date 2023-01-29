@@ -14,3 +14,5 @@ spring:
       maximum-pool-size: 10
       minimum-idle: 5
       read-only: false
+mybatis-plus:
+  type-enums-package: pers.nwafumaster.enums

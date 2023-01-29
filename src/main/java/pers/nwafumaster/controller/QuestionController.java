@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * @author Windlinxy
- * @description
+ * @description 问题相关
  * @date 2023-01-27 19:38
  **/
 @RestController
@@ -31,9 +31,9 @@ public class QuestionController {
     }
 
     @GetMapping("random")
-    public JsonResult<List<Question>> getQuestionsForRegister(){
+    public JsonResult<List<Question>> getQuestionsForRegister() {
         List<Question> questionList = questionService.queryRandomTenQuestionList();
-        if(questionList != null){
+        if (questionList != null) {
             return new JsonResult<List<Question>>().ok(questionList);
         }
         return new JsonResult<List<Question>>().fail();
