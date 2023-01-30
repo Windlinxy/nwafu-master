@@ -43,6 +43,7 @@ public class UserController {
 
 
     @PostMapping("/user/login")
+    @PassToken
     public JsonResult<Object> login(@RequestBody User user) {
         log.info("/user/login : " + user);
         if (!StringUtils.hasLength(user.getUsername()) || !StringUtils.hasLength(user.getPassword())) {
