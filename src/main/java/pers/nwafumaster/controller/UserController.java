@@ -3,20 +3,17 @@ package pers.nwafumaster.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.jdbc.Null;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import pers.nwafumaster.beans.Question;
 import pers.nwafumaster.beans.User;
+import pers.nwafumaster.beans.Disease;
+import pers.nwafumaster.service.DiseaseService;
 import pers.nwafumaster.service.UserService;
 import pers.nwafumaster.vo.JsonResult;
+import pers.nwafumaster.vo.MyPage;
 import pers.nwafumaster.vo.UserRegister;
 
 import javax.annotation.Resource;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Windlinxy
@@ -24,19 +21,26 @@ import java.util.List;
  * @date 2023-01-25 15:28
  **/
 @RestController
-@RequestMapping(value = "/user",
+@RequestMapping(
         produces = "application/json"
 )
 @Slf4j
 public class UserController {
     private UserService userService;
 
+    private DiseaseService diseaseService;
+
+    @Resource
+    public void setDiseaseService(DiseaseService diseaseService) {
+        this.diseaseService = diseaseService;
+    }
+
     @Resource
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     public JsonResult<User> login(@RequestBody User user) {
         log.info("/user/login : " + user);
         if (!StringUtils.hasLength(user.getUsername()) || !StringUtils.hasLength(user.getPassword())) {
@@ -49,7 +53,7 @@ public class UserController {
         return new JsonResult<User>().fail();
     }
 
-    @PostMapping("/check")
+    @PostMapping("/user/check")
     public JsonResult<Object> duplicateCheck(String username) {
         log.info("/user/check: {}", username);
         if (!StringUtils.hasLength(username)) {
@@ -63,7 +67,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/register")
+    @PostMapping("/user/register")
     public JsonResult<User> register(@RequestBody UserRegister userRegister) {
         User user = new User(userRegister);
         log.info("/user/register : " + userRegister);
@@ -79,6 +83,22 @@ public class UserController {
         }
         userService.save(user);
         return new JsonResult<User>().ok(userService.getOne(new QueryWrapper<>(user)));
+    }
+
+    @GetMapping("/disease")
+    public JsonResult<MyPage<Disease>> diseaseList(
+            @RequestParam("name") String diseaseName,
+            @RequestParam("type") String diseaseType,
+            @RequestParam("cur") int currentPage,
+            @RequestParam("size") int pageSize) {
+        MyPage<Disease> myPage = new MyPage<>(currentPage, pageSize);
+        if (StringUtils.hasLength(diseaseType)) {
+            return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, new QueryWrapper<Disease>().eq("disease_type", diseaseType)));
+        }
+        if (StringUtils.hasLength(diseaseName)){
+            return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, new QueryWrapper<Disease>().like("disease_name", diseaseName)));
+        }
+        return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage));
     }
 
 

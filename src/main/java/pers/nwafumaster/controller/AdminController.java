@@ -1,12 +1,10 @@
 package pers.nwafumaster.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import pers.nwafumaster.beans.User;
-import pers.nwafumaster.domain.Disease;
+import pers.nwafumaster.beans.Disease;
 import pers.nwafumaster.service.DiseaseService;
 import pers.nwafumaster.service.UserService;
 import pers.nwafumaster.vo.JsonResult;
@@ -72,16 +70,5 @@ public class AdminController {
         return new JsonResult<>().fail();
     }
 
-    @GetMapping("/disease")
-    public JsonResult<MyPage<Disease>> diseaseList(
-            @RequestParam("type") String diseaseType,
-            @RequestParam("cur") int currentPage,
-            @RequestParam("size") int pageSize) {
-        MyPage<Disease> myPage = new MyPage<>(currentPage, pageSize);
-        if (StringUtils.hasLength(diseaseType)) {
-            return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, new QueryWrapper<Disease>().eq("disease_type", diseaseType)));
-        }
-        return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage));
-    }
 
 }

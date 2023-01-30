@@ -1,6 +1,5 @@
 package pers.nwafumaster.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +9,6 @@ import pers.nwafumaster.vo.JsonResult;
 import pers.nwafumaster.vo.MyPage;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Windlinxy

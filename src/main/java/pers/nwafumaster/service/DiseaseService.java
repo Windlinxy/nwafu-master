@@ -1,6 +1,6 @@
 package pers.nwafumaster.service;
 
-import pers.nwafumaster.domain.Disease;
+import pers.nwafumaster.beans.Disease;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

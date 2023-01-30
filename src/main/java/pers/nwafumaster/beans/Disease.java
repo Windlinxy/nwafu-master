@@ -1,4 +1,4 @@
-package pers.nwafumaster.domain;
+package pers.nwafumaster.beans;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
