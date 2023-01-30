@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pers.nwafumaster.annotation.PassToken;
 import pers.nwafumaster.beans.Question;
 import pers.nwafumaster.service.QuestionService;
 import pers.nwafumaster.vo.JsonResult;
@@ -30,6 +31,7 @@ public class QuestionController {
     }
 
     @GetMapping("random")
+    @PassToken
     public JsonResult<List<Question>> getQuestionsForRegister() {
         List<Question> questionList = questionService.queryRandomTenQuestionList();
         if (questionList != null) {

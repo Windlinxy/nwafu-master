@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import pers.nwafumaster.annotation.PassToken;
 import pers.nwafumaster.beans.User;
 import pers.nwafumaster.beans.Disease;
+import pers.nwafumaster.config.JwtConfig;
 import pers.nwafumaster.service.DiseaseService;
 import pers.nwafumaster.service.UserService;
 import pers.nwafumaster.vo.JsonResult;
@@ -14,6 +16,9 @@ import pers.nwafumaster.vo.MyPage;
 import pers.nwafumaster.vo.UserRegister;
 
 import javax.annotation.Resource;
+import java.rmi.MarshalledObject;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Windlinxy
@@ -26,34 +31,37 @@ import javax.annotation.Resource;
 )
 @Slf4j
 public class UserController {
+    @Resource
     private UserService userService;
 
+    @Resource
     private DiseaseService diseaseService;
 
     @Resource
-    public void setDiseaseService(DiseaseService diseaseService) {
-        this.diseaseService = diseaseService;
-    }
+    private JwtConfig jwtConfig;
 
-    @Resource
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
+
 
     @PostMapping("/user/login")
-    public JsonResult<User> login(@RequestBody User user) {
+    public JsonResult<Object> login(@RequestBody User user) {
         log.info("/user/login : " + user);
         if (!StringUtils.hasLength(user.getUsername()) || !StringUtils.hasLength(user.getPassword())) {
-            return new JsonResult<User>().fail();
+            return new JsonResult<>().fail();
         }
         User userInData;
         if ((userInData = userService.getOne(new QueryWrapper<>(user))) != null) {
-            return new JsonResult<User>().ok(userInData);
+            String token = jwtConfig.sign(userInData);
+            Map<String, Object> body = new HashMap<>();
+            body.put("accessToken", token);
+            body.put("username",userInData.getUsername());
+            body.put("userId", userInData.getUserId());
+            return new JsonResult<>().ok(body);
         }
-        return new JsonResult<User>().fail();
+        return new JsonResult<>().fail();
     }
 
     @PostMapping("/user/check")
+    @PassToken
     public JsonResult<Object> duplicateCheck(String username) {
         log.info("/user/check: {}", username);
         if (!StringUtils.hasLength(username)) {
@@ -68,6 +76,7 @@ public class UserController {
 
 
     @PostMapping("/user/register")
+    @PassToken
     public JsonResult<User> register(@RequestBody UserRegister userRegister) {
         User user = new User(userRegister);
         log.info("/user/register : " + userRegister);
