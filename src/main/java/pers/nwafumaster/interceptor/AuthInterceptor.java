@@ -24,7 +24,6 @@ import java.util.Map;
  * @description
  * @date 2023-01-30 16:05
  **/
-@Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
 
     @Resource
@@ -34,7 +33,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         //预检请求方法
         String options = "OPTIONS";
-        if (judPassToken(handler) || options.equalsIgnoreCase(request.getMethod())) {
+        if (options.equalsIgnoreCase(request.getMethod()) || judPassToken(handler)) {
             return true;
         }
         String token = request.getHeader("Authorization");

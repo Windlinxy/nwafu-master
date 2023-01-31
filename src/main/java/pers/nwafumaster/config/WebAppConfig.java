@@ -3,6 +3,8 @@ package pers.nwafumaster.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -17,7 +19,6 @@ import pers.nwafumaster.interceptor.AuthInterceptor;
 public class WebAppConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        CorsConfiguration corsConfig = new CorsConfiguration();
         registry.addMapping("/**")
                 //是否发送Cookie
                 .allowCredentials(true)
@@ -25,8 +26,7 @@ public class WebAppConfig implements WebMvcConfigurer {
                 .allowedOriginPatterns("*")
                 .allowedMethods("*")
                 .allowedHeaders("*")
-                .exposedHeaders("*")
-                .maxAge(3600);
+                .exposedHeaders("*");
     }
 
     @Override
@@ -34,7 +34,8 @@ public class WebAppConfig implements WebMvcConfigurer {
         //注册自己的拦截器并设置拦截的请求路径
         registry.addInterceptor(authInterceptor())
                 //拦截的路径
-                .addPathPatterns("/**");
+                .addPathPatterns("/**")
+                .excludePathPatterns("");
     }
 
     @Bean
