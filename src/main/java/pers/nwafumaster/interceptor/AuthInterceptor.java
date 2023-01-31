@@ -3,6 +3,7 @@ package pers.nwafumaster.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -25,16 +26,18 @@ import java.util.Map;
  **/
 @Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
+
     @Resource
     private JwtConfig jwtConfig;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        if (judPassToken(handler)) {
+        //预检请求方法
+        String options = "OPTIONS";
+        if (judPassToken(handler) || options.equalsIgnoreCase(request.getMethod())) {
             return true;
         }
         String token = request.getHeader("Authorization");
-//        log.info(token);
         if (StringUtils.hasLength(token)) {
             if (!jwtConfig.isTokenExpired(token)) {
                 return true;
