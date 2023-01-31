@@ -40,9 +40,9 @@ public class FileServiceImpl implements FileService {
         String disposition = file.getOriginalFilename();
         String suffix = disposition != null ? disposition.substring(disposition.lastIndexOf(".")) : "";
         File fileDisk = new File(path);
-        if (!fileDisk.exists()) {
-            fileDisk.mkdir();
-        }
+//        if (!fileDisk.exists()) {
+//            fileDisk.mkdir();
+//        }
 
         // 随机的生成uuid，作为文件名的一部分。 加上刚才获取到的后缀作为最终文件名。
         String uuid = UUID.randomUUID() + "";
