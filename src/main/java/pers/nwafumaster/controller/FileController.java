@@ -28,6 +28,11 @@ public class FileController {
         this.fileService = fileService;
     }
 
+    /**
+     * 单文件上传
+     * @param image 文件
+     * @return 响应
+     */
     @PostMapping(value = "/image", consumes = "multipart/form-data")
     public JsonResult<Object> putImage(MultipartFile image) {
         if (image.isEmpty()) {
@@ -37,6 +42,11 @@ public class FileController {
         return new JsonResult<>().ok(imageUrl);
     }
 
+    /**
+     * 多文件上传
+     * @param images 文件s
+     * @return 响应
+     */
     @PostMapping(value = "/images", consumes = "multipart/form-data")
     public JsonResult<Object> uploadImages(MultipartFile[] images) {
         if (images[0].isEmpty()) {

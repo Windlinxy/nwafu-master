@@ -39,10 +39,11 @@ public class FileServiceImpl implements FileService {
         // 获取上传的文件名扩展名
         String disposition = file.getOriginalFilename();
         String suffix = disposition != null ? disposition.substring(disposition.lastIndexOf(".")) : "";
-//        File fileDisk = new File(path);
-//        if (!fileDisk.exists()) {
-//            fileDisk.mkdir();
-//        }
+        File fileDisk = new File(path);
+        if (!fileDisk.exists()) {
+            fileDisk.mkdir();
+        }
+
         // 随机的生成uuid，作为文件名的一部分。 加上刚才获取到的后缀作为最终文件名。
         String uuid = UUID.randomUUID() + "";
         String filename = uuid.substring(0, 13) + suffix;

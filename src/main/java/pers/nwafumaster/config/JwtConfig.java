@@ -31,11 +31,12 @@ public class JwtConfig {
     /**
      * 过期时间（单位：秒）
      **/
-    private final long EXPIRE_TIME = 3600*7*24L;
+    private final long EXPIRE_TIME = 3600 * 7 * 24L;
 
     public String sign(User user) {
         Map<String, Object> claim = new HashMap<>();
-        claim.put(user.getUserId().toString(),user.getUsername());
+        claim.put("username", user.getUsername());
+        claim.put("userId", user.getUserId());
         Date date = new Date();
         return Jwts.builder()
                 .setClaims(claim)
@@ -66,7 +67,12 @@ public class JwtConfig {
      * @param token 令牌
      */
     public boolean isTokenExpired(String token) {
-        return getExpirationDateFromToken(token).before(new Date());
+        Date expiration = getExpirationDateFromToken(token);
+        if (expiration != null) {
+            return getExpirationDateFromToken(token).before(new Date());
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -75,14 +81,18 @@ public class JwtConfig {
      * @param token 令牌
      */
     public Date getExpirationDateFromToken(String token) {
-        return getTokenClaim(token).getExpiration();
+        Claims claims = getTokenClaim(token);
+        return (claims == null) ? null : claims.getExpiration();
     }
 
     /**
      * 获取用户名从token中
      */
-    public String getUsernameFromToken(String token) {
-        return getTokenClaim(token).getSubject();
+    public User getUser(String token) {
+        Claims map = getTokenClaim(token);
+        String username = (String) map.get("username");
+        Integer userId = (Integer) map.get("userId");
+        return new User(userId,username);
     }
 
     /**

@@ -32,8 +32,6 @@ public class WebAppConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor())
                 //拦截的路径
                 .addPathPatterns("/**");
-                //排除的路径
-//                .excludePathPatterns("");
     }
 
     @Bean

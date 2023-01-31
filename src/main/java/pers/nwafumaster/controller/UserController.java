@@ -41,7 +41,11 @@ public class UserController {
     private JwtConfig jwtConfig;
 
 
-
+    /**
+     * 用户注册
+     * @param user 用户名，密码
+     * @return 响应
+     */
     @PostMapping("/user/login")
     @PassToken
     public JsonResult<Object> login(@RequestBody User user) {
@@ -61,6 +65,11 @@ public class UserController {
         return new JsonResult<>().fail();
     }
 
+    /**
+     * 用户名重复检验
+     * @param username 用户名
+     * @return 响应
+     */
     @PostMapping("/user/check")
     @PassToken
     public JsonResult<Object> duplicateCheck(String username) {
@@ -76,6 +85,11 @@ public class UserController {
     }
 
 
+    /**
+     * 用户注册
+     * @param userRegister 注册的用户（携带5条感兴趣问题）
+     * @return 响应
+     */
     @PostMapping("/user/register")
     @PassToken
     public JsonResult<User> register(@RequestBody UserRegister userRegister) {
@@ -95,6 +109,14 @@ public class UserController {
         return new JsonResult<User>().ok(userService.getOne(new QueryWrapper<>(user)));
     }
 
+    /**
+     * 病虫害信息查询
+     * @param diseaseName 病虫害名
+     * @param diseaseType 病虫害类型
+     * @param currentPage 当前页
+     * @param pageSize 页面大小
+     * @return 响应
+     */
     @GetMapping("/disease")
     public JsonResult<MyPage<Disease>> diseaseList(
             @RequestParam("name") String diseaseName,

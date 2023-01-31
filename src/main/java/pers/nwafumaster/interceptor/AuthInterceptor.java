@@ -3,6 +3,7 @@ package pers.nwafumaster.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import pers.nwafumaster.annotation.PassToken;
@@ -29,21 +30,25 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        if (judPassToken(handler)){
+        if (judPassToken(handler)) {
             return true;
         }
         String token = request.getHeader("Authorization");
-        log.info(token);
-        if (token == null) {
-            returnCodeNotLogin(response);
-            return false;
+//        log.info(token);
+        if (StringUtils.hasLength(token)) {
+            if (!jwtConfig.isTokenExpired(token)) {
+                return true;
+            }
+            returnMsg(response, "token错误");
         } else {
-            return !jwtConfig.isTokenExpired(token);
+            returnMsg(response, "未登录");
         }
+        return false;
     }
 
     /**
      * 检查是否有PassToken注释，有则跳过认证
+     *
      * @param handler handler
      * @return 是否有PassToken注释
      */
@@ -56,12 +61,12 @@ public class AuthInterceptor implements HandlerInterceptor {
         return false;
     }
 
-    private void returnCodeNotLogin(HttpServletResponse response) throws IOException {
+    private void returnMsg(HttpServletResponse response, String msg) throws IOException {
 
         Map<String, Object> map = new HashMap<>();
         response.setCharacterEncoding("utf-8");
         map.put("code", 1001);
-        map.put("msg", "未登录");
+        map.put("msg", msg);
         PrintWriter out;
         String jsonString;
         out = response.getWriter();

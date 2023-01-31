@@ -30,6 +30,10 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
+    /**
+     * 随机获取10条问题
+     * @return 问题
+     */
     @GetMapping("random")
     @PassToken
     public JsonResult<List<Question>> getQuestionsForRegister() {
