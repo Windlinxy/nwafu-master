@@ -1,9 +1,9 @@
 package pers.nwafumaster.service.impl;
 
-import lombok.Setter;
-import lombok.Value;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pers.nwafumaster.service.FileService;
@@ -21,20 +21,20 @@ import java.util.UUID;
  **/
 @Slf4j
 @ConfigurationProperties(prefix = "file-service")
-@Setter
+@Data
 @Service
 public class FileServiceImpl implements FileService {
 
     /**
      * 文件路径
      */
-    String path = "/";
+    private String path;
 
 
     /**
      * 图片链接
      */
-    String imageUrl = "/";
+    private String imageUrl;
 
 
     @Override

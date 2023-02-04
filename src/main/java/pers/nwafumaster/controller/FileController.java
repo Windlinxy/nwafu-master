@@ -20,13 +20,8 @@ import java.util.List;
         produces = "application/json"
 )
 public class FileController {
-
-    private FileService fileService;
-
     @Resource
-    public void setFileService(FileService fileService) {
-        this.fileService = fileService;
-    }
+    private FileService fileService;
 
     /**
      * 单文件上传

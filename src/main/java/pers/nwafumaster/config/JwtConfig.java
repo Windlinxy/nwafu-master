@@ -3,9 +3,11 @@ package pers.nwafumaster.config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 import pers.nwafumaster.beans.User;
 
@@ -18,10 +20,12 @@ import java.util.Map;
  * @description
  * @date 2023-01-30 16:46
  **/
-@Setter
+
+
+@Slf4j(topic = "jwtConfig")
+@Data
 @Component
 @ConfigurationProperties(prefix = "jwt")
-@Slf4j(topic = "JwtConfig")
 public class JwtConfig {
 
     /**
@@ -33,6 +37,7 @@ public class JwtConfig {
      * 过期时间（单位：秒）
      **/
     private long expireTime = 604800;
+
 
     public String sign(User user) {
         Map<String, Object> claim = new HashMap<>();
@@ -93,7 +98,7 @@ public class JwtConfig {
         Claims map = getTokenClaim(token);
         String username = (String) map.get("username");
         Integer userId = (Integer) map.get("userId");
-        return new User(userId,username);
+        return new User(userId, username);
     }
 
     /**

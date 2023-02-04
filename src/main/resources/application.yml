@@ -50,8 +50,8 @@ management:
       exposure:
         include: shutdown,health,beans
 jwt:
-  secret: NWAFUAA
-  expire-time: 6048000
+  secret: NWAFU
+  expire-time: 604800
 
 
 # debug: on 自动配置查看

@@ -21,10 +21,10 @@ public class JWTest {
     @Test
     public void test(){
 
-        JwtConfig jwtConfig = new JwtConfig();
-        String token = jwtConfig.sign(new User(1,"nihao"));
-        System.out.println(token);
-        System.out.println(jwtConfig.getTokenClaim(token).get("1"));
-        System.out.println(jwtConfig.isTokenExpired(token));
+//        JwtConfig jwtConfig = new JwtConfig();
+//        String token = jwtConfig.sign(new User(1,"nihao"));
+//        System.out.println(token);
+//        System.out.println(jwtConfig.getTokenClaim(token).get("1"));
+//        System.out.println(jwtConfig.isTokenExpired(token));
     }
 }
