@@ -21,6 +21,9 @@ spring:
       maximum-pool-size: 10
       minimum-idle: 5
       read-only: false
+  mvc:
+    static-path-pattern: /static/**
+
 
 mybatis-plus:
   global-config:
@@ -52,6 +55,5 @@ management:
 jwt:
   secret: NWAFU
   expire-time: 604800
-
 
 # debug: on 自动配置查看
