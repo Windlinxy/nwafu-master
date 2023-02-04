@@ -1,13 +1,17 @@
-
 spring:
+  jmx:
+    enabled: off
+
+  main:
+    lazy-initialization: off
+    banner-mode: off
+
   servlet:
     multipart:
       max-file-size: 20MB
       max-request-size: 100MB
 
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    type: com.zaxxer.hikari.HikariDataSource
     hikari:
       connection-timeout: 10000
       validation-timeout: 3000
@@ -22,7 +26,6 @@ mybatis-plus:
   global-config:
     banner: false
   type-enums-package: pers.nwafumaster.enums
-
 
 management:
   endpoint:
@@ -47,4 +50,8 @@ management:
       exposure:
         include: shutdown,health,beans
 jwt:
-  key: NWAFU
+  secret: NWAFUAA
+  expire-time: 6048000
+
+
+# debug: on 自动配置查看

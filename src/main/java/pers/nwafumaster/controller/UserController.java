@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import pers.nwafumaster.annotation.PassToken;
-import pers.nwafumaster.beans.User;
 import pers.nwafumaster.beans.Disease;
+import pers.nwafumaster.beans.User;
 import pers.nwafumaster.config.JwtConfig;
 import pers.nwafumaster.service.DiseaseService;
 import pers.nwafumaster.service.UserService;
@@ -16,7 +16,6 @@ import pers.nwafumaster.vo.MyPage;
 import pers.nwafumaster.vo.UserRegister;
 
 import javax.annotation.Resource;
-import java.rmi.MarshalledObject;
 import java.util.HashMap;
 import java.util.Map;
 

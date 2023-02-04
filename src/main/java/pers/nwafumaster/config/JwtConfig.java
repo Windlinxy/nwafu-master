@@ -3,9 +3,9 @@ package pers.nwafumaster.config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.support.DataAccessUtils;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import pers.nwafumaster.beans.User;
 
@@ -18,20 +18,21 @@ import java.util.Map;
  * @description
  * @date 2023-01-30 16:46
  **/
-@Data
+@Setter
 @Component
+@ConfigurationProperties(prefix = "jwt")
+@Slf4j(topic = "JwtConfig")
 public class JwtConfig {
 
     /**
      * 密钥
      */
-    @Value("${jwt.key}")
-    private String SECRET = "NWAFU";
+    private String secret = "NWAFU";
 
     /**
      * 过期时间（单位：秒）
      **/
-    private final long EXPIRE_TIME = 3600 * 7 * 24L;
+    private long expireTime = 604800;
 
     public String sign(User user) {
         Map<String, Object> claim = new HashMap<>();
@@ -41,8 +42,8 @@ public class JwtConfig {
         return Jwts.builder()
                 .setClaims(claim)
                 .setIssuedAt(date)
-                .setExpiration(new Date(date.getTime() + EXPIRE_TIME * 1000))
-                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .setExpiration(new Date(date.getTime() + expireTime * 1000))
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
@@ -51,7 +52,7 @@ public class JwtConfig {
      */
     public Claims getTokenClaim(String token) {
         try {
-            return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
+            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         } catch (Exception e) {
             return null;
             /*  catch (ExpiredJwtException e){

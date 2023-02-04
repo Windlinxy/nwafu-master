@@ -2,9 +2,6 @@ package pers.nwafumaster.vo;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;
-import pers.nwafumaster.beans.User;
-
-import java.util.List;
 
 /**
  * @author Windlinxy

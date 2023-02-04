@@ -1,9 +1,7 @@
 package pers.nwafumaster.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -55,10 +53,12 @@ public class AuthInterceptor implements HandlerInterceptor {
      * @return 是否有PassToken注释
      */
     private boolean judPassToken(Object handler) {
-        Method method = ((HandlerMethod) handler).getMethod();
-        if (method.isAnnotationPresent(PassToken.class)) {
-            PassToken passToken = method.getAnnotation(PassToken.class);
-            return passToken.required();
+        if(handler instanceof HandlerMethod){
+            Method method = ((HandlerMethod) handler).getMethod();
+            if (method.isAnnotationPresent(PassToken.class)) {
+                PassToken passToken = method.getAnnotation(PassToken.class);
+                return passToken.required();
+            }
         }
         return false;
     }

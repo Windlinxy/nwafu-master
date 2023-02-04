@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import pers.nwafumaster.beans.Message;
+import pers.nwafumaster.beans.User;
 import pers.nwafumaster.enums.MessageType;
 import pers.nwafumaster.service.FileService;
 import pers.nwafumaster.service.MessageService;
