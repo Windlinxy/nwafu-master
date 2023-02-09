@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import pers.nwafumaster.annotation.AdminCheck;
 import pers.nwafumaster.annotation.PassToken;
 import pers.nwafumaster.config.JwtConfig;
 
@@ -18,7 +19,7 @@ import java.util.Map;
 
 /**
  * @author Windlinxy
- * @description
+ * @description 用户登录权限拦截器
  * @date 2023-01-30 16:05
  **/
 public class AuthInterceptor implements HandlerInterceptor {
@@ -61,6 +62,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
         return false;
     }
+
+
 
     private void returnMsg(HttpServletResponse response, String msg) throws IOException {
 

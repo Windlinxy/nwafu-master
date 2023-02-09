@@ -63,8 +63,8 @@ public class MessageController {
      */
     @GetMapping()
     public JsonResult<MyPage<Message>> getMessages(
-            @RequestParam("cur") int currentPage,
-            @RequestParam("size") int pageSize) {
+            @RequestParam(value = "cur",defaultValue = "1") int currentPage,
+            @RequestParam(value = "size",defaultValue = "10") int pageSize) {
         MyPage<Message> myPage = new MyPage<>(currentPage, pageSize);
         return new JsonResult<MyPage<Message>>().ok(messageService.page(myPage));
     }
@@ -84,12 +84,15 @@ public class MessageController {
 
     @DeleteMapping()
     public JsonResult<Object> deleteMessage(
-            HttpServletRequest request,
+            @RequestHeader("Authorization") String token,
             @RequestParam("messageId") Integer messageId) {
-        String token = request.getHeader("Authorization");
         User user = jwtConfig.getUser(token);
         LambdaQueryWrapper<Message> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Message::getUserId, user.getUserId()).eq(Message::getMessageId, messageId);
+        if ("admin".equals(user.getUsername())){
+            queryWrapper.eq(Message::getMessageId, messageId);
+        }else {
+            queryWrapper.eq(Message::getUserId, user.getUserId()).eq(Message::getMessageId, messageId);
+        }
         if (messageService.remove(queryWrapper)) {
             return new JsonResult<>().ok();
         }

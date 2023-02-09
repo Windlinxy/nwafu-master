@@ -2,6 +2,8 @@ package pers.nwafumaster.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import pers.nwafumaster.vo.MyPage;
 import pers.nwafumaster.vo.UserRegister;
 
 import javax.annotation.Resource;
+import javax.websocket.server.PathParam;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +45,7 @@ public class UserController {
 
     /**
      * 用户注册
+     *
      * @param user 用户名，密码
      * @return 响应
      */
@@ -57,7 +61,7 @@ public class UserController {
             String token = jwtConfig.sign(userInData);
             Map<String, Object> body = new HashMap<>();
             body.put("accessToken", token);
-            body.put("username",userInData.getUsername());
+            body.put("username", userInData.getUsername());
             body.put("userId", userInData.getUserId());
             return new JsonResult<>().ok(body);
         }
@@ -66,6 +70,7 @@ public class UserController {
 
     /**
      * 用户名重复检验
+     *
      * @param username 用户名
      * @return 响应
      */
@@ -86,6 +91,7 @@ public class UserController {
 
     /**
      * 用户注册
+     *
      * @param userRegister 注册的用户（携带5条感兴趣问题）
      * @return 响应
      */
@@ -110,27 +116,38 @@ public class UserController {
 
     /**
      * 病虫害信息查询
+     *
      * @param diseaseName 病虫害名
      * @param diseaseType 病虫害类型
      * @param currentPage 当前页
-     * @param pageSize 页面大小
+     * @param pageSize    页面大小
      * @return 响应
      */
     @GetMapping("/disease")
     public JsonResult<MyPage<Disease>> diseaseList(
             @RequestParam("name") String diseaseName,
             @RequestParam("type") String diseaseType,
-            @RequestParam("cur") int currentPage,
-            @RequestParam("size") int pageSize) {
+            @RequestParam(value = "cur", defaultValue = "1") int currentPage,
+            @RequestParam(value = "size", defaultValue = "10") int pageSize) {
         MyPage<Disease> myPage = new MyPage<>(currentPage, pageSize);
         if (StringUtils.hasLength(diseaseType)) {
             return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, new QueryWrapper<Disease>().eq("disease_type", diseaseType)));
         }
-        if (StringUtils.hasLength(diseaseName)){
+        if (StringUtils.hasLength(diseaseName)) {
             return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, new QueryWrapper<Disease>().like("disease_name", diseaseName)));
         }
         return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage));
     }
 
+    @GetMapping("/disease/{id}")
+    public JsonResult<Disease> getDisease(
+            @PathVariable("id") int diseaseId
+    ) {
+        Disease diseaseInDatabase = diseaseService.getAndCreFire(diseaseId);
+        return (diseaseInDatabase != null) ?
+                new JsonResult<Disease>().ok(diseaseInDatabase)
+                : new JsonResult<Disease>().fail("没有找到信息");
+
+    }
 
 }

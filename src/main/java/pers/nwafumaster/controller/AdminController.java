@@ -1,10 +1,12 @@
 package pers.nwafumaster.controller;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import pers.nwafumaster.beans.User;
 import pers.nwafumaster.beans.Disease;
+import pers.nwafumaster.beans.User;
+import pers.nwafumaster.config.JwtConfig;
 import pers.nwafumaster.service.DiseaseService;
 import pers.nwafumaster.service.UserService;
 import pers.nwafumaster.vo.JsonResult;
@@ -25,25 +27,19 @@ import javax.annotation.Resource;
 @Slf4j
 public class AdminController {
 
+    @Resource
+    private JwtConfig jwtConfig;
+
+    @Resource
     private UserService userService;
 
+    @Resource
     private DiseaseService diseaseService;
-
-    @Resource
-    public void setDiseaseService(DiseaseService diseaseService) {
-        this.diseaseService = diseaseService;
-    }
-
-    @Resource
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
 
     @GetMapping("/user")
     public JsonResult<MyPage<User>> userList(
-            @RequestParam("cur") int currentPage,
-            @RequestParam("size") int pageSize) {
+            @RequestParam(value = "cur", defaultValue = "1") int currentPage,
+            @RequestParam(value = "size", defaultValue = "10") int pageSize) {
         MyPage<User> myPage = new MyPage<>(currentPage, pageSize);
         return new JsonResult<MyPage<User>>().ok(userService.page(myPage));
     }
@@ -70,5 +66,30 @@ public class AdminController {
         return new JsonResult<>().fail();
     }
 
+    @PostMapping("/disease/{id}")
+    public JsonResult<Object> updateDisease(
+            @PathVariable("id") int diseaseId,
+            @RequestBody Disease disease) {
+        if (disease == null) {
+            return new JsonResult<>().fail();
+        }
+        LambdaUpdateWrapper<Disease> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(Disease::getDiseaseId, diseaseId);
+        return diseaseService.update(disease, updateWrapper) ?
+                new JsonResult<>().ok()
+                : new JsonResult<>().fail();
+    }
+
+    @DeleteMapping("/disease/{id}")
+    public JsonResult<Object> deleteDiseaseById(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("id") int diseaseId
+    ) {
+        User user = jwtConfig.getUser(token);
+        if ("admin".equals(user.getUsername()) && diseaseService.removeById(diseaseId)){
+            return new JsonResult<>().ok();
+        }
+        return new JsonResult<>().fail();
+    }
 
 }

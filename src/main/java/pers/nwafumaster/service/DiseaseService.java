@@ -8,4 +8,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface DiseaseService extends IService<Disease> {
 
+    Disease getAndCreFire(int DiseaseId);
+
 }

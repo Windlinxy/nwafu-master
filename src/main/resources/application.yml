@@ -31,27 +31,19 @@ mybatis-plus:
   type-enums-package: pers.nwafumaster.enums
 
 management:
-  endpoint:
-    shutdown:
-      enabled: true
-    beans:
-      enabled: true
-    health:
-      enabled: true
-
-  server:
-    address: localhost
-    port: 8086
+#  server:
+#    address: localhost
+#    port: 8086
 
   endpoints:
     web:
       base-path: /ops
-      path-mapping:
-        shutdown: shutdown
-        health: health
-        beans: beans
-      exposure:
-        include: shutdown,health,beans
+#      exposure:
+#        include: '*'
+#    enabled-by-default: on # 默认是开启状态
+#  endpoint:
+#    health:
+#      show-details: always
 jwt:
   secret: NWAFU
   expire-time: 604800
