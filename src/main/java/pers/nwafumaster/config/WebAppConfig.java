@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import pers.nwafumaster.annotation.AdminCheck;
+import pers.nwafumaster.interceptor.AdminInterceptor;
 import pers.nwafumaster.interceptor.AuthInterceptor;
 
 /**
@@ -33,11 +35,18 @@ public class WebAppConfig implements WebMvcConfigurer {
                 //拦截的路径
                 .addPathPatterns("/**")
                 .excludePathPatterns("");
+        registry.addInterceptor(adminInterceptor())
+                .addPathPatterns("/admin/**");
     }
 
     @Bean
-    public AuthInterceptor authInterceptor(){
+    public AuthInterceptor authInterceptor() {
         return new AuthInterceptor();
+    }
+
+    @Bean
+    public AdminInterceptor adminInterceptor() {
+        return new AdminInterceptor();
     }
 }
 

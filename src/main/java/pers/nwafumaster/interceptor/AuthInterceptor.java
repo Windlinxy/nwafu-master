@@ -7,6 +7,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import pers.nwafumaster.annotation.AdminCheck;
 import pers.nwafumaster.annotation.PassToken;
 import pers.nwafumaster.config.JwtConfig;
+import pers.nwafumaster.vo.JsonResult;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +40,9 @@ public class AuthInterceptor implements HandlerInterceptor {
             if (!jwtConfig.isTokenExpired(token)) {
                 return true;
             }
-            returnMsg(response, "token错误");
+            JsonResult.returnMsg(response, "token错误");
         } else {
-            returnMsg(response, "未登录");
+            JsonResult.returnMsg(response, "未登录");
         }
         return false;
     }
@@ -62,21 +63,4 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
         return false;
     }
-
-
-
-    private void returnMsg(HttpServletResponse response, String msg) throws IOException {
-
-        Map<String, Object> map = new HashMap<>();
-        response.setCharacterEncoding("utf-8");
-        map.put("code", 1001);
-        map.put("msg", msg);
-        PrintWriter out;
-        String jsonString;
-        out = response.getWriter();
-        jsonString = new ObjectMapper().writeValueAsString(map);
-        out.println(jsonString);
-        out.flush();
-    }
-
 }

@@ -1,6 +1,13 @@
 package pers.nwafumaster.vo;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @description: json返回
@@ -51,5 +58,15 @@ public class JsonResult<T> {
 
     public JsonResult<T> ok(T data) {
         return new JsonResult<>(2001, "操作成功", data);
+    }
+
+    public static void returnMsg(HttpServletResponse response, String msg) throws IOException {
+        response.setCharacterEncoding("utf-8");
+        PrintWriter out;
+        String jsonString;
+        out = response.getWriter();
+        jsonString = new ObjectMapper().writeValueAsString(new JsonResult<>().fail(msg));
+        out.println(jsonString);
+        out.flush();
     }
 }
