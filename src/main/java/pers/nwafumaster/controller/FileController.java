@@ -25,6 +25,7 @@ public class FileController {
 
     /**
      * 单文件上传
+     *
      * @param image 文件
      * @return 响应
      */
@@ -39,6 +40,7 @@ public class FileController {
 
     /**
      * 多文件上传
+     *
      * @param images 文件s
      * @return 响应
      */

@@ -32,6 +32,7 @@ public class QuestionController {
 
     /**
      * 随机获取10条问题
+     *
      * @return 问题
      */
     @GetMapping("random")

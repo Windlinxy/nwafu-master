@@ -6,6 +6,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import pers.nwafumaster.annotation.AdminCheck;
 import pers.nwafumaster.annotation.PassToken;
+import pers.nwafumaster.beans.User;
 import pers.nwafumaster.config.JwtConfig;
 import pers.nwafumaster.vo.JsonResult;
 
@@ -38,6 +39,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         String token = request.getHeader("Authorization");
         if (StringUtils.hasLength(token)) {
             if (!jwtConfig.isTokenExpired(token)) {
+                request.setAttribute("user",jwtConfig.getUser(token));
                 return true;
             }
             JsonResult.returnMsg(response, "token错误");

@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import pers.nwafumaster.annotation.AdminCheck;
 import pers.nwafumaster.beans.Disease;
 import pers.nwafumaster.beans.User;
-import pers.nwafumaster.config.JwtConfig;
 import pers.nwafumaster.service.DiseaseService;
 import pers.nwafumaster.service.UserService;
 import pers.nwafumaster.vo.JsonResult;
@@ -25,17 +25,21 @@ import javax.annotation.Resource;
         produces = "application/json"
 )
 @Slf4j
+@AdminCheck
 public class AdminController {
-
-    @Resource
-    private JwtConfig jwtConfig;
-
     @Resource
     private UserService userService;
 
     @Resource
     private DiseaseService diseaseService;
 
+    /**
+     * 获取用户列表
+     *
+     * @param currentPage 当前页码
+     * @param pageSize    页面信息数
+     * @return 页面
+     */
     @GetMapping("/user")
     public JsonResult<MyPage<User>> userList(
             @RequestParam(value = "cur", defaultValue = "1") int currentPage,
@@ -44,6 +48,12 @@ public class AdminController {
         return new JsonResult<MyPage<User>>().ok(userService.page(myPage));
     }
 
+    /**
+     * 添加病虫害信息
+     *
+     * @param disease 详细信息
+     * @return 响应
+     */
     @PostMapping("/disease")
     public JsonResult<Object> addDisease(@RequestBody Disease disease) {
         log.info("/admin/disease : {}", disease);
@@ -66,6 +76,13 @@ public class AdminController {
         return new JsonResult<>().fail();
     }
 
+    /**
+     * 更新病虫害信息
+     *
+     * @param diseaseId 病虫害id
+     * @param disease   详细信息
+     * @return 响应
+     */
     @PostMapping("/disease/{id}")
     public JsonResult<Object> updateDisease(
             @PathVariable("id") int diseaseId,
@@ -80,13 +97,17 @@ public class AdminController {
                 : new JsonResult<>().fail();
     }
 
+    /**
+     * 删除病虫害
+     *
+     * @param diseaseId 病虫害id
+     * @return 响应
+     */
     @DeleteMapping("/disease/{id}")
     public JsonResult<Object> deleteDiseaseById(
-            @RequestHeader("Authorization") String token,
             @PathVariable("id") int diseaseId
     ) {
-        User user = jwtConfig.getUser(token);
-        if ("admin".equals(user.getUsername()) && diseaseService.removeById(diseaseId)){
+        if (diseaseService.removeById(diseaseId)) {
             return new JsonResult<>().ok();
         }
         return new JsonResult<>().fail();

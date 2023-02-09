@@ -63,34 +63,46 @@ public class MessageController {
      */
     @GetMapping()
     public JsonResult<MyPage<Message>> getMessages(
-            @RequestParam(value = "cur",defaultValue = "1") int currentPage,
-            @RequestParam(value = "size",defaultValue = "10") int pageSize) {
+            @RequestParam(value = "cur", defaultValue = "1") int currentPage,
+            @RequestParam(value = "size", defaultValue = "10") int pageSize) {
         MyPage<Message> myPage = new MyPage<>(currentPage, pageSize);
         return new JsonResult<MyPage<Message>>().ok(messageService.page(myPage));
     }
 
+    /**
+     * 查看个人留言
+     *
+     * @param user        user 请求域用户（拦截器中设置）
+     * @param currentPage 当前页码
+     * @param pageSize    页面信息数
+     * @return 响应
+     */
     @GetMapping("/my")
     public JsonResult<MyPage<Message>> getMessagesPersonal(
-            HttpServletRequest request,
+            @RequestAttribute User user,
             @RequestParam("cur") int currentPage,
             @RequestParam("size") int pageSize) {
-        String token = request.getHeader("Authorization");
-        User user = jwtConfig.getUser(token);
         MyPage<Message> myPage = new MyPage<>(currentPage, pageSize);
         LambdaQueryWrapper<Message> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Message::getUserId, user.getUserId());
         return new JsonResult<MyPage<Message>>().ok(messageService.page(myPage, wrapper));
     }
 
+    /**
+     * 删除留言
+     *
+     * @param user      请求域用户（拦截器中设置）
+     * @param messageId 消息id
+     * @return 响应
+     */
     @DeleteMapping()
     public JsonResult<Object> deleteMessage(
-            @RequestHeader("Authorization") String token,
+            @RequestAttribute("user") User user,
             @RequestParam("messageId") Integer messageId) {
-        User user = jwtConfig.getUser(token);
         LambdaQueryWrapper<Message> queryWrapper = new LambdaQueryWrapper<>();
-        if ("admin".equals(user.getUsername())){
+        if ("admin".equals(user.getUsername())) {
             queryWrapper.eq(Message::getMessageId, messageId);
-        }else {
+        } else {
             queryWrapper.eq(Message::getUserId, user.getUserId()).eq(Message::getMessageId, messageId);
         }
         if (messageService.remove(queryWrapper)) {

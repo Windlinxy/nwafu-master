@@ -139,6 +139,12 @@ public class UserController {
         return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage));
     }
 
+    /**
+     * 获取病虫害详情
+     *
+     * @param diseaseId 病虫害id
+     * @return 响应
+     */
     @GetMapping("/disease/{id}")
     public JsonResult<Disease> getDisease(
             @PathVariable("id") int diseaseId
