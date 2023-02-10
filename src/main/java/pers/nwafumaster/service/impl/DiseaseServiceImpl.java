@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 /**
  *
+ * @author Windlinxy
  */
 @Service
 public class DiseaseServiceImpl extends ServiceImpl<DiseaseMapper, Disease>

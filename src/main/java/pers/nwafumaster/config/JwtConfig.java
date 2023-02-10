@@ -18,8 +18,6 @@ import java.util.Map;
  * @description
  * @date 2023-01-30 16:46
  **/
-
-
 @Slf4j(topic = "jwtConfig")
 @Data
 @Component

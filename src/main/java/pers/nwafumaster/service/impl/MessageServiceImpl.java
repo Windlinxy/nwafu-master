@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 /**
  *
+ * @author Windlinxy
  */
 @Service
 public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>

@@ -2,8 +2,6 @@ package pers.nwafumaster.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +18,6 @@ import pers.nwafumaster.vo.MyPage;
 import pers.nwafumaster.vo.UserRegister;
 
 import javax.annotation.Resource;
-import javax.websocket.server.PathParam;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,6 +159,10 @@ public class UserController {
 
     }
 
+    /**
+     * 随机实体
+     * @return 实体列表
+     */
     @GetMapping("/interest/random")
     public JsonResult<List<Interest>>getInterest() {
         return new JsonResult<List<Interest>>().ok(interestService.queryRandomTenList());

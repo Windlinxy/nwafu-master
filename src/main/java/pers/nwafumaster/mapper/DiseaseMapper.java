@@ -5,6 +5,7 @@ import pers.nwafumaster.beans.Disease;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
+ * @author Windlinxy
  * @Entity pers.nwafumaster.beans.Disease
  */
 @Mapper

@@ -11,6 +11,7 @@ import lombok.Data;
 
 /**
  * 
+ * @author Windlinxy
  * @TableName tb_disease
  */
 @TableName(value ="tb_disease")

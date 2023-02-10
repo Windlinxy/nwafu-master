@@ -9,6 +9,7 @@ import lombok.Data;
 
 /**
  * 
+ * @author Windlinxy
  * @TableName tb_interest
  */
 @TableName(value ="tb_interest")

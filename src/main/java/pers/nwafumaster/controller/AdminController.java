@@ -1,6 +1,7 @@
 package pers.nwafumaster.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -109,6 +110,11 @@ public class AdminController {
         return new JsonResult<>().jud(diseaseService.removeById(diseaseId));
     }
 
+    /**
+     * 添加推荐实体
+     * @param interest 实体
+     * @return 响应
+     */
     @PostMapping("/interest")
     public JsonResult<Object> addInterest(@RequestBody Interest interest) {
         if (interest == null){
@@ -123,31 +129,63 @@ public class AdminController {
         return new JsonResult<>().fail();
     }
 
+    /**
+     * 推荐实体
+     * @param interestId id
+     * @return 响应
+     */
     @GetMapping("/interest/{id}")
     public JsonResult<Interest> getInterest(@PathVariable("id") int interestId) {
         return new JsonResult<Interest>().ok(interestService.getById(interestId));
     }
 
 
-
+    /**
+     * page
+     * @param currentPage 当前页码
+     * @param pageSize 页面信息数
+     * @return 响应
+     */
     @GetMapping("/interest")
-    public JsonResult<MyPage<Interest>> interestList(
+    public JsonResult<MyPage<Interest>> interestPage(
             @RequestParam(value = "cur", defaultValue = "1") int currentPage,
             @RequestParam(value = "size", defaultValue = "10") int pageSize) {
         MyPage<Interest> myPage = new MyPage<>(currentPage, pageSize);
         return new JsonResult<MyPage<Interest>>().ok(interestService.page(myPage));
     }
 
+    /**
+     * 更新推荐详情
+     * @param interest 推按
+     * @param interestId id
+     * @return 响应
+     */
     @PostMapping("/interest/{id}")
-    public JsonResult<Interest> getInterest(
+    public JsonResult<Interest> upInterest(
             @RequestBody Interest interest,
             @PathVariable("id") int interestId) {
         interest.setInterestedId(interestId);
         return new JsonResult<Interest>().jud(interestService.updateById(interest));
     }
 
+    /**
+     * 删除推荐
+     * @param interestId id
+     * @return 响应
+     */
     @DeleteMapping("/interest/{id}")
     public JsonResult<Object> deleteInterestById(@PathVariable("id") int interestId) {
         return new JsonResult<>().jud(interestService.removeById(interestId));
+    }
+
+
+    @GetMapping("/disease")
+    public JsonResult<MyPage<Disease>> diseaseList(
+            @RequestParam(value = "cur", defaultValue = "1") int currentPage,
+            @RequestParam(value = "size", defaultValue = "10") int pageSize) {
+        MyPage<Disease> myPage = new MyPage<>(currentPage, pageSize);
+        LambdaQueryWrapper<Disease> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Disease::getDiseaseId,Disease::getDiseaseName);
+        return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage,queryWrapper));
     }
 }

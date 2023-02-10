@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  *
+ * @author Windlinxy
  */
 public interface InterestService extends IService<Interest> {
     List<Interest> queryRandomTenList();

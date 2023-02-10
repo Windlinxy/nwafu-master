@@ -1,6 +1,5 @@
 package pers.nwafumaster.interceptor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -11,11 +10,6 @@ import pers.nwafumaster.vo.JsonResult;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Windlinxy
@@ -29,6 +23,10 @@ public class AdminInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        String options = "OPTIONS";
+        if (options.equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
         if(judAdminCheck(handler, request)){
             return true;
         }else {

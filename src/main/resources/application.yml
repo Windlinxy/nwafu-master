@@ -29,8 +29,6 @@ mybatis-plus:
   type-enums-package: pers.nwafumaster.enums
 
 management:
-  server:
-    port: 8086
 
   endpoints:
     web:
@@ -41,6 +39,8 @@ management:
   endpoint:
     health:
       show-details: always
+    shutdown:
+      enabled: on
 jwt:
   secret: NWAFU
   expire-time: 604800

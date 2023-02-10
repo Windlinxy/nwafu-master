@@ -2,6 +2,7 @@ package pers.nwafumaster.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.StringUtils;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import pers.nwafumaster.annotation.AdminCheck;
@@ -34,6 +35,13 @@ public class AuthInterceptor implements HandlerInterceptor {
         //预检请求方法
         String options = "OPTIONS";
         if (options.equalsIgnoreCase(request.getMethod()) || judPassToken(handler)) {
+            return true;
+        }
+        if (CorsUtils.isPreFlightRequest(request)){
+            return true;
+        }
+        String uri = request.getRequestURI();
+        if (uri.contains("ops")){
             return true;
         }
         String token = request.getHeader("Authorization");
