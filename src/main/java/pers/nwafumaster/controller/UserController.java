@@ -9,9 +9,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import pers.nwafumaster.annotation.PassToken;
 import pers.nwafumaster.beans.Disease;
+import pers.nwafumaster.beans.Interest;
 import pers.nwafumaster.beans.User;
 import pers.nwafumaster.config.JwtConfig;
 import pers.nwafumaster.service.DiseaseService;
+import pers.nwafumaster.service.InterestService;
 import pers.nwafumaster.service.UserService;
 import pers.nwafumaster.vo.JsonResult;
 import pers.nwafumaster.vo.MyPage;
@@ -20,6 +22,7 @@ import pers.nwafumaster.vo.UserRegister;
 import javax.annotation.Resource;
 import javax.websocket.server.PathParam;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,6 +44,9 @@ public class UserController {
 
     @Resource
     private JwtConfig jwtConfig;
+
+    @Resource
+    private InterestService interestService;
 
 
     /**
@@ -154,6 +160,11 @@ public class UserController {
                 new JsonResult<Disease>().ok(diseaseInDatabase)
                 : new JsonResult<Disease>().fail("没有找到信息");
 
+    }
+
+    @GetMapping("/interest/random")
+    public JsonResult<List<Interest>>getInterest() {
+        return new JsonResult<List<Interest>>().ok(interestService.queryRandomTenList());
     }
 
 }

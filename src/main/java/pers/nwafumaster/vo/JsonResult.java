@@ -60,6 +60,10 @@ public class JsonResult<T> {
         return new JsonResult<>(2001, "操作成功", data);
     }
 
+    public JsonResult<T> jud(boolean condition) {
+        return condition ? ok() : fail();
+    }
+
     public static void returnMsg(HttpServletResponse response, String msg) throws IOException {
         response.setCharacterEncoding("utf-8");
         PrintWriter out;
