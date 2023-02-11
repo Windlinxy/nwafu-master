@@ -20,7 +20,7 @@ public class Disease implements Serializable {
     /**
      * 病虫害id
      */
-    @TableId(type = IdType.AUTO)
+    @TableId
     private Integer diseaseId;
 
     /**

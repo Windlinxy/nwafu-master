@@ -19,7 +19,7 @@ public class Question implements Serializable {
     /**
      * 问题id
      */
-    @TableId(type = IdType.AUTO)
+    @TableId
     private Integer questionId;
 
     /**

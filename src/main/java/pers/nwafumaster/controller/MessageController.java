@@ -80,8 +80,8 @@ public class MessageController {
     @GetMapping("/my")
     public JsonResult<MyPage<Message>> getMessagesPersonal(
             @RequestAttribute User user,
-            @RequestParam("cur") int currentPage,
-            @RequestParam("size") int pageSize) {
+            @RequestParam(value = "cur", defaultValue = "1") int currentPage,
+            @RequestParam(value = "size", defaultValue = "10") int pageSize) {
         MyPage<Message> myPage = new MyPage<>(currentPage, pageSize);
         LambdaQueryWrapper<Message> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Message::getUserId, user.getUserId());
@@ -95,10 +95,10 @@ public class MessageController {
      * @param messageId 消息id
      * @return 响应
      */
-    @DeleteMapping()
+    @DeleteMapping("/{id}")
     public JsonResult<Object> deleteMessage(
             @RequestAttribute("user") User user,
-            @RequestParam("messageId") Integer messageId) {
+            @PathVariable("id") Integer messageId) {
         LambdaQueryWrapper<Message> queryWrapper = new LambdaQueryWrapper<>();
         if ("admin".equals(user.getUsername())) {
             queryWrapper.eq(Message::getMessageId, messageId);

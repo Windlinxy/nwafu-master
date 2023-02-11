@@ -18,7 +18,7 @@ public class Interest implements Serializable {
     /**
      * 感兴趣id
      */
-    @TableId(type = IdType.AUTO)
+    @TableId
     private Integer interestedId;
 
     /**
