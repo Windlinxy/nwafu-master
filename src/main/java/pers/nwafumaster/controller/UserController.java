@@ -168,4 +168,15 @@ public class UserController {
         return new JsonResult<List<Interest>>().ok(interestService.queryRandomTenList());
     }
 
+    @GetMapping("/disease/fire")
+    public JsonResult<MyPage<Disease>> fireDiseaseList(
+            @RequestParam(value = "cur", defaultValue = "1") int currentPage,
+            @RequestParam(value = "size", defaultValue = "10") int pageSize) {
+        MyPage<Disease> myPage = new MyPage<>(currentPage, pageSize);
+        LambdaQueryWrapper<Disease> queryWrapper = new LambdaQueryWrapper<Disease>()
+                .select(Disease::getDiseaseId, Disease::getDiseaseName, Disease::getSImgUrl)
+                .orderByDesc(true, Disease::getFire);
+        return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage,queryWrapper));
+    }
+
 }

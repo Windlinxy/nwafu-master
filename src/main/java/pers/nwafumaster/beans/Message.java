@@ -20,7 +20,7 @@ public class Message implements Serializable {
     /**
      * 留言id
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer messageId;
 
     /**
