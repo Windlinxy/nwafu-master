@@ -21,9 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  **/
 @RestController
 @RequestMapping(value = "/message",
-        produces = "application/json"
-)
-@Slf4j
+        produces = "application/json")
 public class MessageController {
     @Resource
     private MessageService messageService;
@@ -66,7 +64,9 @@ public class MessageController {
             @RequestParam(value = "cur", defaultValue = "1") int currentPage,
             @RequestParam(value = "size", defaultValue = "10") int pageSize) {
         MyPage<Message> myPage = new MyPage<>(currentPage, pageSize);
-        return new JsonResult<MyPage<Message>>().ok(messageService.page(myPage));
+        LambdaQueryWrapper<Message> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(Message::getMessageId);
+        return new JsonResult<MyPage<Message>>().ok(messageService.page(myPage, queryWrapper));
     }
 
     /**
@@ -85,6 +85,7 @@ public class MessageController {
         MyPage<Message> myPage = new MyPage<>(currentPage, pageSize);
         LambdaQueryWrapper<Message> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Message::getUserId, user.getUserId());
+        wrapper.orderByDesc(Message::getMessageId);
         return new JsonResult<MyPage<Message>>().ok(messageService.page(myPage, wrapper));
     }
 

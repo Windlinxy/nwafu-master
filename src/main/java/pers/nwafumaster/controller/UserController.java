@@ -3,21 +3,25 @@ package pers.nwafumaster.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import pers.nwafumaster.annotation.PassToken;
 import pers.nwafumaster.beans.Disease;
 import pers.nwafumaster.beans.Interest;
 import pers.nwafumaster.beans.User;
+import pers.nwafumaster.beans.UserEntity;
 import pers.nwafumaster.config.JwtConfig;
 import pers.nwafumaster.service.DiseaseService;
 import pers.nwafumaster.service.InterestService;
+import pers.nwafumaster.service.UserEntityService;
 import pers.nwafumaster.service.UserService;
 import pers.nwafumaster.vo.JsonResult;
 import pers.nwafumaster.vo.MyPage;
 import pers.nwafumaster.vo.UserRegister;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +48,9 @@ public class UserController {
 
     @Resource
     private InterestService interestService;
+
+    @Resource
+    private UserEntityService userEntityService;
 
 
     /**
@@ -100,6 +107,7 @@ public class UserController {
      */
     @PostMapping("/user/register")
     @PassToken
+    @Transactional(rollbackFor = RuntimeException.class)
     public JsonResult<User> register(@RequestBody UserRegister userRegister) {
         User user = new User(userRegister);
         log.info("/user/register : " + userRegister);
@@ -113,8 +121,13 @@ public class UserController {
         if (result == 1) {
             return new JsonResult<User>().fail("用户名已存在");
         }
-        userService.save(user);
-        return new JsonResult<User>().ok(userService.getOne(new QueryWrapper<>(user)));
+        if (userService.save(user)) {
+            Arrays.stream(userRegister.getInterestQuestions()).
+                    forEach(item -> userEntityService.save(new UserEntity(user.getUsername(), item)));
+            return new JsonResult<User>().ok(userService.getOne(new QueryWrapper<>(user)));
+        } else {
+            return new JsonResult<User>().fail();
+        }
     }
 
     /**
@@ -133,13 +146,15 @@ public class UserController {
             @RequestParam(value = "cur", defaultValue = "1") int currentPage,
             @RequestParam(value = "size", defaultValue = "10") int pageSize) {
         MyPage<Disease> myPage = new MyPage<>(currentPage, pageSize);
+        LambdaQueryWrapper<Disease> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(Disease::getDiseaseId);
         if (StringUtils.hasLength(diseaseType)) {
-            return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, new QueryWrapper<Disease>().eq("disease_type", diseaseType)));
+            return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, queryWrapper.eq(Disease::getDiseaseType, diseaseType)));
         }
         if (StringUtils.hasLength(diseaseName)) {
-            return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, new QueryWrapper<Disease>().like("disease_name", diseaseName)));
+            return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, queryWrapper.like(Disease::getDiseaseName, diseaseName)));
         }
-        return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage));
+        return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, queryWrapper));
     }
 
     /**
@@ -150,8 +165,13 @@ public class UserController {
      */
     @GetMapping("/disease/{id}")
     public JsonResult<Disease> getDisease(
-            @PathVariable("id") int diseaseId
+            @PathVariable("id") int diseaseId,
+            @RequestAttribute User user,
+            @RequestParam("entity") String entity
     ) {
+        if (StringUtils.hasText(entity)){
+            userEntityService.save(new UserEntity(user.getUsername(), entity));
+        }
         Disease diseaseInDatabase = diseaseService.getAndCreFire(diseaseId);
         return (diseaseInDatabase != null) ?
                 new JsonResult<Disease>().ok(diseaseInDatabase)
@@ -161,10 +181,11 @@ public class UserController {
 
     /**
      * 随机实体
+     *
      * @return 实体列表
      */
     @GetMapping("/interest/random")
-    public JsonResult<List<Interest>>getInterest() {
+    public JsonResult<List<Interest>> getInterest() {
         return new JsonResult<List<Interest>>().ok(interestService.queryRandomTenList());
     }
 
@@ -176,7 +197,7 @@ public class UserController {
         LambdaQueryWrapper<Disease> queryWrapper = new LambdaQueryWrapper<Disease>()
                 .select(Disease::getDiseaseId, Disease::getDiseaseName, Disease::getSImgUrl)
                 .orderByDesc(true, Disease::getFire);
-        return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage,queryWrapper));
+        return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, queryWrapper));
     }
 
 }

@@ -24,15 +24,7 @@ public class UserRegister {
      * 感兴趣的问题列表
      */
     @JsonAlias("interestList")
-    private int[] interestQuestions;
-
-    public int[] getInterestQuestions() {
-        return interestQuestions;
-    }
-
-    public void setInterestQuestions(int[] interestQuestions) {
-        this.interestQuestions = interestQuestions;
-    }
+    private String[] interestQuestions;
 
 
 }

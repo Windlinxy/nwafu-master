@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3307/web_nwafu?useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&allowMultiQueries=true
+    username: root
+    password: 123456
+file-service:
+  path: /usr/local/project_web01/docker/nginx/html/files/
+  image-url: http://8.130.53.222/files/

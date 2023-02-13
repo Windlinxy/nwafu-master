@@ -12,12 +12,15 @@ import pers.nwafumaster.beans.Interest;
 import pers.nwafumaster.beans.User;
 import pers.nwafumaster.service.DiseaseService;
 import pers.nwafumaster.service.InterestService;
+import pers.nwafumaster.service.UserEntityService;
 import pers.nwafumaster.service.UserService;
 import pers.nwafumaster.vo.JsonResult;
 import pers.nwafumaster.vo.MyPage;
 
 import javax.annotation.Resource;
 import javax.security.auth.kerberos.KerberosKey;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -38,6 +41,9 @@ public class AdminController {
 
     @Resource
     private InterestService interestService;
+
+    @Resource
+    private UserEntityService userEntityService;
 
     /**
      * 获取用户列表
@@ -112,12 +118,13 @@ public class AdminController {
 
     /**
      * 添加推荐实体
+     *
      * @param interest 实体
      * @return 响应
      */
     @PostMapping("/interest")
     public JsonResult<Object> addInterest(@RequestBody Interest interest) {
-        if (interest == null){
+        if (interest == null) {
             return new JsonResult<>().fail();
         }
         if (StringUtils.hasLength(interest.getEntity()) && interest.getDiseaseId() != null && interest.getDiseaseId() != 0) {
@@ -131,6 +138,7 @@ public class AdminController {
 
     /**
      * 推荐实体
+     *
      * @param interestId id
      * @return 响应
      */
@@ -142,8 +150,9 @@ public class AdminController {
 
     /**
      * page
+     *
      * @param currentPage 当前页码
-     * @param pageSize 页面信息数
+     * @param pageSize    页面信息数
      * @return 响应
      */
     @GetMapping("/interest")
@@ -156,7 +165,8 @@ public class AdminController {
 
     /**
      * 更新推荐详情
-     * @param interest 推按
+     *
+     * @param interest   推按
      * @param interestId id
      * @return 响应
      */
@@ -170,6 +180,7 @@ public class AdminController {
 
     /**
      * 删除推荐
+     *
      * @param interestId id
      * @return 响应
      */
@@ -179,13 +190,31 @@ public class AdminController {
     }
 
 
+    /**
+     * 为实体添加服务，返回病虫害id和名
+     *
+     * @param currentPage 当前页
+     * @param pageSize    页面信息数
+     * @return 响应
+     */
     @GetMapping("/disease")
     public JsonResult<MyPage<Disease>> diseaseList(
             @RequestParam(value = "cur", defaultValue = "1") int currentPage,
             @RequestParam(value = "size", defaultValue = "10") int pageSize) {
         MyPage<Disease> myPage = new MyPage<>(currentPage, pageSize);
         LambdaQueryWrapper<Disease> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(Disease::getDiseaseId,Disease::getDiseaseName);
-        return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage,queryWrapper));
+        queryWrapper.select(Disease::getDiseaseId, Disease::getDiseaseName);
+        return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, queryWrapper));
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param response 响应
+     * @throws IOException io异常
+     */
+    @GetMapping(value = "/excel", produces = "application/vnd.ms-excel;charset=UTF-8")
+    public void excelExport(HttpServletResponse response) throws IOException {
+        userEntityService.excelExport(response);
     }
 }
