@@ -24,20 +24,38 @@ public class UserEntity implements Serializable {
     private Integer id;
 
     /**
-     * 
+     * 用户名
      */
     private String username;
 
     /**
-     * 
+     * 实体
      */
-    private String entityName;
+    private String entity;
+
+    /**
+     * 问题描述
+     */
+    private String question;
+
+    /**
+     * 实体id
+     */
+    private Integer entityId;
+
+    /**
+     * 选择与否
+     */
+    private Integer mark;
+
+    @TableField(exist = false)
+    private Integer questionId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    public UserEntity(String username, String entityName) {
+    public UserEntity(String username, String entity) {
         this.username = username;
-        this.entityName = entityName;
+        this.entity = entity;
     }
 }

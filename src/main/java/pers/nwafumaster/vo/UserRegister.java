@@ -2,6 +2,9 @@ package pers.nwafumaster.vo;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;
+import pers.nwafumaster.beans.UserEntity;
+
+import java.util.List;
 
 /**
  * @author Windlinxy
@@ -24,7 +27,7 @@ public class UserRegister {
      * 感兴趣的问题列表
      */
     @JsonAlias("interestList")
-    private String[] interestQuestions;
+    private List<UserEntity> interestQuestions;
 
 
 }

@@ -7,5 +7,5 @@ spring:
     username: root
     password: 123456
 file-service:
-  path: /usr/local/project_web01/docker/nginx/html/files/
-  image-url: http://8.130.53.222/files/
+  path: /usr/local/project_web01/docker/nginx/html/images/
+  image-url: http://8.130.53.222/images/

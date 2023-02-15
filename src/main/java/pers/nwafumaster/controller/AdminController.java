@@ -1,27 +1,22 @@
 package pers.nwafumaster.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import pers.nwafumaster.annotation.AdminCheck;
 import pers.nwafumaster.beans.Disease;
-import pers.nwafumaster.beans.Interest;
 import pers.nwafumaster.beans.User;
 import pers.nwafumaster.service.DiseaseService;
-import pers.nwafumaster.service.InterestService;
 import pers.nwafumaster.service.UserEntityService;
 import pers.nwafumaster.service.UserService;
 import pers.nwafumaster.vo.JsonResult;
 import pers.nwafumaster.vo.MyPage;
 
 import javax.annotation.Resource;
-import javax.security.auth.kerberos.KerberosKey;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * @author Windlinxy
@@ -38,9 +33,6 @@ public class AdminController {
 
     @Resource
     private DiseaseService diseaseService;
-
-    @Resource
-    private InterestService interestService;
 
     @Resource
     private UserEntityService userEntityService;
@@ -116,82 +108,11 @@ public class AdminController {
         return new JsonResult<>().jud(diseaseService.removeById(diseaseId));
     }
 
-    /**
-     * 添加推荐实体
-     *
-     * @param interest 实体
-     * @return 响应
-     */
-    @PostMapping("/interest")
-    public JsonResult<Object> addInterest(@RequestBody Interest interest) {
-        if (interest == null) {
-            return new JsonResult<>().fail();
-        }
-        if (StringUtils.hasLength(interest.getEntity()) && interest.getDiseaseId() != null && interest.getDiseaseId() != 0) {
-            LambdaQueryWrapper<Disease> eq = new LambdaQueryWrapper<Disease>().eq(Disease::getDiseaseId, interest.getDiseaseId());
-            if (diseaseService.getOne(eq) != null && interestService.save(interest)) {
-                return new JsonResult<>().ok();
-            }
-        }
-        return new JsonResult<>().fail();
-    }
 
-    /**
-     * 推荐实体
-     *
-     * @param interestId id
-     * @return 响应
-     */
-    @GetMapping("/interest/{id}")
-    public JsonResult<Interest> getInterest(@PathVariable("id") int interestId) {
-        return new JsonResult<Interest>().ok(interestService.getById(interestId));
-    }
 
 
     /**
-     * page
-     *
-     * @param currentPage 当前页码
-     * @param pageSize    页面信息数
-     * @return 响应
-     */
-    @GetMapping("/interest")
-    public JsonResult<MyPage<Interest>> interestPage(
-            @RequestParam(value = "cur", defaultValue = "1") int currentPage,
-            @RequestParam(value = "size", defaultValue = "10") int pageSize) {
-        MyPage<Interest> myPage = new MyPage<>(currentPage, pageSize);
-        return new JsonResult<MyPage<Interest>>().ok(interestService.page(myPage));
-    }
-
-    /**
-     * 更新推荐详情
-     *
-     * @param interest   推按
-     * @param interestId id
-     * @return 响应
-     */
-    @PostMapping("/interest/{id}")
-    public JsonResult<Interest> upInterest(
-            @RequestBody Interest interest,
-            @PathVariable("id") int interestId) {
-        interest.setInterestedId(interestId);
-        return new JsonResult<Interest>().jud(interestService.updateById(interest));
-    }
-
-    /**
-     * 删除推荐
-     *
-     * @param interestId id
-     * @return 响应
-     */
-    @DeleteMapping("/interest/{id}")
-    public JsonResult<Object> deleteInterestById(@PathVariable("id") int interestId) {
-        return new JsonResult<>().jud(interestService.removeById(interestId));
-    }
-
-
-    /**
-     * 为实体添加服务，返回病虫害id和名
+     * 为实体添加提供服务，返回病虫害id和名
      *
      * @param currentPage 当前页
      * @param pageSize    页面信息数
@@ -206,6 +127,7 @@ public class AdminController {
         queryWrapper.select(Disease::getDiseaseId, Disease::getDiseaseName);
         return new JsonResult<MyPage<Disease>>().ok(diseaseService.page(myPage, queryWrapper));
     }
+
 
     /**
      * 导出excel

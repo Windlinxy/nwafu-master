@@ -8,6 +8,7 @@ import pers.nwafumaster.annotation.PassToken;
 import pers.nwafumaster.beans.Question;
 import pers.nwafumaster.service.QuestionService;
 import pers.nwafumaster.vo.JsonResult;
+import pers.nwafumaster.vo.QuestionAndUrl;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -44,4 +45,14 @@ public class QuestionController {
         }
         return new JsonResult<List<Question>>().fail();
     }
+
+    /**
+     * 热门问题
+     * @return 响应
+     */
+    @GetMapping("/fire")
+    public JsonResult<List<QuestionAndUrl>> fireQuestionList() {
+        return new JsonResult<List<QuestionAndUrl>>().ok(questionService.getFireQuestions());
+    }
+
 }

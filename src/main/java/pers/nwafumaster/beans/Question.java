@@ -33,9 +33,9 @@ public class Question implements Serializable {
     private Integer diseaseId;
 
     /**
-     * 病虫害名
+     * 实体名
      */
-    private String diseaseName;
+    private String entity;
 
     /**
      * 病虫害类型
@@ -46,6 +46,16 @@ public class Question implements Serializable {
      * 问题类型
      */
     private String questionType;
+
+    /**
+     * 问题热度
+     */
+    private Integer fire;
+
+    /**
+     * 实体id
+     */
+    private Integer entityId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

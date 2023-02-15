@@ -7,7 +7,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 
@@ -16,6 +18,8 @@ import lombok.Data;
  */
 @TableName(value ="tb_disease")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Disease implements Serializable {
     /**
      * 病虫害id
@@ -68,6 +72,10 @@ public class Disease implements Serializable {
      * 热度
      */
     private Long fire;
+
+    public Disease(Integer diseaseId) {
+        this.diseaseId = diseaseId;
+    }
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
