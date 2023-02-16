@@ -55,7 +55,7 @@ public class FileServiceImpl implements FileService {
         serverFilePart = imageUrl + filename;
         localFilePart = path + filename;
 
-        log.info("存储路径：" + localFilePart);
+        //存储路径： localFilePart
         try {
             file.transferTo(new File(localFilePart));
         } catch (IOException e) {

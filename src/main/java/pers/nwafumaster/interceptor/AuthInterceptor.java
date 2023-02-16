@@ -1,13 +1,11 @@
 package pers.nwafumaster.interceptor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import pers.nwafumaster.annotation.AdminCheck;
 import pers.nwafumaster.annotation.PassToken;
-import pers.nwafumaster.beans.User;
 import pers.nwafumaster.config.JwtConfig;
 import pers.nwafumaster.vo.JsonResult;
 
@@ -15,16 +13,14 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Windlinxy
  * @description 用户登录权限拦截器
  * @date 2023-01-30 16:05
  **/
+@Slf4j(topic = "AuthInterceptor")
 public class AuthInterceptor implements HandlerInterceptor {
 
     @Resource
@@ -37,6 +33,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (options.equalsIgnoreCase(request.getMethod()) || judPassToken(handler)) {
             return true;
         }
+        log.info("options: ==> "+request.getRequestURI());
         if (CorsUtils.isPreFlightRequest(request)){
             return true;
         }

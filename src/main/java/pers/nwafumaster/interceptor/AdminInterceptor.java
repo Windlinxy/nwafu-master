@@ -47,7 +47,6 @@ public class AdminInterceptor implements HandlerInterceptor {
             adminCheck = ((HandlerMethod) handler).getBean().getClass().getAnnotation(AdminCheck.class);
         }
         String username = jwtConfig.getUser(request.getHeader("Authorization")).getUsername();
-        log.info("token-username:{}",username);
         if ("admin".equals(username)) {
             return adminCheck.required();
         } else {

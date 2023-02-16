@@ -64,7 +64,6 @@ public class UserEntityServiceImpl extends ServiceImpl<UserEntityMapper, UserEnt
         List<UserEntity> list = userRegister.getInterestQuestions();
         list.forEach(item -> item.setUsername(userRegister.getUsername()));
         questionService.batchCreFire(list);
-        log.info(userRegister.getInterestQuestions().toString());
         return saveBatch(userRegister.getInterestQuestions());
     }
 }

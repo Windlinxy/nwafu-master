@@ -52,7 +52,7 @@ public class UserController {
     @PostMapping("/user/login")
     @PassToken
     public JsonResult<Object> login(@RequestBody User user) {
-        log.info("/user/login : " + user);
+        log.info("/user/login : " + user.getUsername());
         if (!StringUtils.hasLength(user.getUsername()) || !StringUtils.hasLength(user.getPassword())) {
             return new JsonResult<>().fail();
         }
@@ -81,8 +81,7 @@ public class UserController {
         if (!StringUtils.hasLength(username)) {
             return new JsonResult<>().fail("用户名为空");
         }
-        long result = userService.count(new QueryWrapper<User>().select("username").eq("username", username));
-        if (result == 1) {
+        if (usernameDuplicateCheck(username)) {
             return new JsonResult<>().fail("用户名已存在");
         }
         return new JsonResult<>().ok();
