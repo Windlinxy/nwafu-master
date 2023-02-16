@@ -1,9 +1,8 @@
 package pers.nwafumaster.service.impl;
 
-import lombok.*;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pers.nwafumaster.service.FileService;

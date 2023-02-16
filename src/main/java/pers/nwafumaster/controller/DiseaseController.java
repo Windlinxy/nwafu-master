@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import pers.nwafumaster.beans.Disease;
-import pers.nwafumaster.beans.User;
-import pers.nwafumaster.beans.UserEntity;
 import pers.nwafumaster.service.DiseaseService;
 import pers.nwafumaster.vo.JsonResult;
 import pers.nwafumaster.vo.MyPage;

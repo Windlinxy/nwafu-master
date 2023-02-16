@@ -72,7 +72,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         LambdaQueryWrapper<Question> queryWrapper = new LambdaQueryWrapper<Question>()
                 .select(Question::getDiseaseId, Question::getDescription)
                 .orderByDesc(true, Question::getFire)
-                .last("limit 4");
+                .last("limit 12");
         List<Question> list = this.list(queryWrapper);
         List<QuestionAndUrl> result = new ArrayList<>();
         list.forEach(item -> result.add(new QuestionAndUrl(item)));
